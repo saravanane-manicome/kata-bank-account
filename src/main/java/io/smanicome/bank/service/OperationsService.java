@@ -26,6 +26,15 @@ public class OperationsService implements BankService {
         return operationsDao.save(operation);
     }
 
+    public Operation withdraw(UUID accountId, Amount amount) {
+        final var balance = getCurrentBalanceOfAccount(accountId);
+
+        final var updatedBalance = balance.subtract(amount.getValue());
+
+        final var operation = new Operation(OperationType.WITHDRAWAL, accountId, amount, LocalDateTime.now(clock), updatedBalance);
+        return operationsDao.save(operation);
+    }
+
     private BigDecimal getCurrentBalanceOfAccount(UUID accountId) {
         return operationsDao.findLastByAccountId(accountId)
             .map(Operation::balance)

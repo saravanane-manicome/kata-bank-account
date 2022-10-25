@@ -18,12 +18,12 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OperationsServiceTest {
@@ -55,6 +55,40 @@ class OperationsServiceTest {
         when(operationsDao.save(any())).thenReturn(operation);
 
         final var resultingOperation = operationsService.deposit(accountId, Amount.of(BigDecimal.valueOf(100)));
+
+        assertEquals(operation, resultingOperation);
+
+        final var orderVerifier = inOrder(operationsDao);
+        orderVerifier.verify(operationsDao).findLastByAccountId(accountId);
+        orderVerifier.verify(operationsDao).save(operation);
+        orderVerifier.verifyNoMoreInteractions();
+    }
+
+    @DisplayName("should withdraw from account")
+    @Test
+    void withdrawFromAccount() throws NegativeAmountException {
+        final var accountId = UUID.randomUUID();
+        final var date = LocalDateTime.now(fixedClock);
+        final var operation = new Operation(
+                OperationType.WITHDRAWAL,
+                accountId,
+                Amount.of(BigDecimal.valueOf(100)),
+                date,
+                BigDecimal.valueOf(100).setScale(2, RoundingMode.HALF_EVEN)
+        );
+
+        final var latestOperation = new Operation(
+                OperationType.DEPOSIT,
+                accountId,
+                Amount.of(BigDecimal.valueOf(200)),
+                date,
+                BigDecimal.valueOf(200).setScale(2, RoundingMode.HALF_EVEN)
+        );
+
+        when(operationsDao.findLastByAccountId(any())).thenReturn(Optional.of(latestOperation));
+        when(operationsDao.save(any())).thenReturn(operation);
+
+        final var resultingOperation = operationsService.withdraw(accountId, Amount.of(BigDecimal.valueOf(100)));
 
         assertEquals(operation, resultingOperation);
 
