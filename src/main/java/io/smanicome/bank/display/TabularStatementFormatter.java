@@ -14,6 +14,7 @@ import static java.lang.Math.max;
 public class TabularStatementFormatter implements StatementFormatter {
     private static final String columnSeparator = " | ";
     private static final String DATE_FORMAT_PATTERN = "dd-MM-yyyy HH:mm:ss";
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN);
     private static final int OPERATION_TYPE_LENGTH = 10;
     private static final int DATE_TIME_LENGTH = DATE_FORMAT_PATTERN.length();
     private static final int AMOUNT_LENGTH = 24;
@@ -44,7 +45,7 @@ public class TabularStatementFormatter implements StatementFormatter {
 
     private List<String> buildHeaders(Statement statement) {
         final var title = "STATEMENT OF ACCOUNT N°" + statement.accountId();
-        final var statementDate = statement.date().format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
+        final var statementDate = statement.date().format(FORMATTER);
         final var balance = "BALANCE " + statement.balance().toString();
 
         return Stream.of(separator(), title, statementDate, balance)
@@ -76,7 +77,7 @@ public class TabularStatementFormatter implements StatementFormatter {
         final var operationType = operation.operationType().name();
         final var formattedOperationType = String.format("%-" + OPERATION_TYPE_LENGTH + "s", operationType);
 
-        final var date = operation.date().format(DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN));
+        final var date = operation.date().format(FORMATTER);
         final var formattedDate = center(date, DATE_TIME_LENGTH);
 
         final var amount = operation.amount().getValue().toString();

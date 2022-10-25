@@ -18,6 +18,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TabularStatementFormatterShould {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
     @DisplayName("should format statement with no operation")
     @Test
     void formatStatementWithNoOperation() {
@@ -32,7 +34,7 @@ class TabularStatementFormatterShould {
             date
         );
 
-        final var formattedDate = date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        final var formattedDate = date.format(FORMATTER);
         final var expectedLines = List.of(
             "| ----------------------------------------------------------- |",
             "| STATEMENT OF ACCOUNT N°" + accountId + " |",
@@ -42,6 +44,7 @@ class TabularStatementFormatterShould {
         );
 
         final var lines = formatter.format(statement);
+
 
         assertEquals(expectedLines, lines);
     }
@@ -55,8 +58,8 @@ class TabularStatementFormatterShould {
         final var operationDate = LocalDateTime.now();
         final var statementDate = operationDate.plusMinutes(10);
 
-        final var formattedOperationDate = operationDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
-        final var formattedStatementDate = statementDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        final var formattedOperationDate = operationDate.format(FORMATTER);
+        final var formattedStatementDate = statementDate.format(FORMATTER);
 
         final var operations = List.of(
             new Operation(
@@ -103,10 +106,10 @@ class TabularStatementFormatterShould {
         final var operationDate3 = operationDate2.plusMinutes(10);
         final var statementDate = operationDate3.plusMinutes(10);
 
-        final var formattedOperationDate1 = operationDate1.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
-        final var formattedOperationDate2 = operationDate2.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
-        final var formattedOperationDate3 = operationDate3.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
-        final var formattedStatementDate = statementDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        final var formattedOperationDate1 = operationDate1.format(FORMATTER);
+        final var formattedOperationDate2 = operationDate2.format(FORMATTER);
+        final var formattedOperationDate3 = operationDate3.format(FORMATTER);
+        final var formattedStatementDate = statementDate.format(FORMATTER);
 
         final var operations = List.of(
             new Operation(
