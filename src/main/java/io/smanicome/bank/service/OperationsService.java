@@ -6,7 +6,7 @@ import io.smanicome.bank.account.OperationType;
 import io.smanicome.bank.account.Statement;
 import io.smanicome.bank.data.OperationsDao;
 import io.smanicome.bank.exceptions.NotEnoughBalanceException;
-import io.smanicome.bank.utils.StatementWriter;
+import io.smanicome.bank.display.StatementWriter;
 
 import java.math.BigDecimal;
 import java.time.Clock;

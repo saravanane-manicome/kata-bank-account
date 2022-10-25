@@ -7,7 +7,7 @@ import io.smanicome.bank.account.Statement;
 import io.smanicome.bank.data.OperationsDao;
 import io.smanicome.bank.exceptions.NegativeAmountException;
 import io.smanicome.bank.exceptions.NotEnoughBalanceException;
-import io.smanicome.bank.utils.StatementWriter;
+import io.smanicome.bank.display.StatementWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

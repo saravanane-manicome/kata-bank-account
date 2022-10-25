@@ -1,4 +1,4 @@
-package io.smanicome.bank.utils;
+package io.smanicome.bank.display;
 
 import io.smanicome.bank.account.Amount;
 import io.smanicome.bank.account.Operation;

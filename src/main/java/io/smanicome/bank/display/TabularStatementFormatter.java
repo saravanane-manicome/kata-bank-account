@@ -1,13 +1,11 @@
-package io.smanicome.bank.utils;
+package io.smanicome.bank.display;
 
 import io.smanicome.bank.account.Operation;
 import io.smanicome.bank.account.Statement;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
