@@ -4,6 +4,7 @@ import io.smanicome.bank.account.Amount;
 import io.smanicome.bank.account.Operation;
 import io.smanicome.bank.account.OperationType;
 import io.smanicome.bank.data.OperationsDao;
+import io.smanicome.bank.exceptions.NotEnoughBalanceException;
 
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -26,8 +27,10 @@ public class OperationsService implements BankService {
         return operationsDao.save(operation);
     }
 
-    public Operation withdraw(UUID accountId, Amount amount) {
+    public Operation withdraw(UUID accountId, Amount amount) throws NotEnoughBalanceException {
         final var balance = getCurrentBalanceOfAccount(accountId);
+
+        if(amount.getValue().doubleValue() > balance.doubleValue()) throw new NotEnoughBalanceException();
 
         final var updatedBalance = balance.subtract(amount.getValue());
 

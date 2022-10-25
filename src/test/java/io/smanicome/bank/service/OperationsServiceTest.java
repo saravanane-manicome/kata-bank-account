@@ -5,6 +5,7 @@ import io.smanicome.bank.account.Operation;
 import io.smanicome.bank.account.OperationType;
 import io.smanicome.bank.data.OperationsDao;
 import io.smanicome.bank.exceptions.NegativeAmountException;
+import io.smanicome.bank.exceptions.NotEnoughBalanceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,7 +67,7 @@ class OperationsServiceTest {
 
     @DisplayName("should withdraw from account")
     @Test
-    void withdrawFromAccount() throws NegativeAmountException {
+    void withdrawFromAccount() throws NotEnoughBalanceException, NegativeAmountException {
         final var accountId = UUID.randomUUID();
         final var date = LocalDateTime.now(fixedClock);
         final var operation = new Operation(
@@ -96,5 +97,16 @@ class OperationsServiceTest {
         orderVerifier.verify(operationsDao).findLastByAccountId(accountId);
         orderVerifier.verify(operationsDao).save(operation);
         orderVerifier.verifyNoMoreInteractions();
+    }
+
+    @DisplayName("should throw when trying to withdraw from account with amount greater than balance")
+    @Test
+    void throwWhenWithdrawAmountGreaterThanAccountBalance() {
+        final var accountId = UUID.randomUUID();
+
+        assertThrows(NotEnoughBalanceException.class, () -> operationsService.withdraw(accountId, Amount.of(BigDecimal.valueOf(100))));
+
+        verify(operationsDao).findLastByAccountId(accountId);
+        verifyNoMoreInteractions(operationsDao);
     }
 }
